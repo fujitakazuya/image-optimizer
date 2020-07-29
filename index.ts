@@ -5,6 +5,8 @@ import imageminGifsicle from 'imagemin-gifsicle'
 import imageminSvgo from 'imagemin-svgo'
 import { exec } from 'child_process'
 import path from 'path'
+import util from 'util'
+import childProcess from 'child_process'
 
 const optimize = async (inputPath: string, destinationPath: string) => {
   const response = await imagemin([`${inputPath}/*.{jpg,jpeg,png,gif,svg}`], {
@@ -32,6 +34,7 @@ const optimize = async (inputPath: string, destinationPath: string) => {
 ;(async () => {
   const assets = path.resolve(__dirname, 'assets')
   const dist = path.resolve(__dirname, 'dist')
-  // TODO: dist の中身を削除する
+  const execSync = util.promisify(childProcess.exec)
+  await execSync(`rm ${dist}/*`)
   await optimize(assets, dist)
 })()
